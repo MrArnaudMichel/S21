@@ -32,20 +32,23 @@ void tree(const char* directory) {
 
 void tree_(const char *directory, int order) {
     struct dirent **namelist;
-    int n;
-    n = scandir(directory, &namelist, 0, 0);
-    if (n < 0) {
-        return;
-    } else {
-        for (int i = 0; i < n; i++) {
-            if (is_visible(namelist[i]->d_name)) {
+    char *path = malloc(1024 * sizeof(char));
+    int n = scandir(directory, &namelist, NULL, alphasort);
+    if (n == -1) {
+        fprintf(stderr, "Error opening directory %s\n", directory);
+        exit(EXIT_FAILURE);
+    }
+    for (int i = 0; i < n; ++i) {
+        if (is_visible(namelist[i]->d_name)) {
+            strcpy(path, directory);
+            strcat(path, "/");
+            strcat(path, namelist[i]->d_name);
+            if (is_directory(path)) {
                 print_directory(namelist[i]->d_name, order);
-                if (is_directory(namelist[i]->d_name) == 1) {
-                    tree_(namelist[i]->d_name, order + 1);
-                }
+                tree_(path, order + 1);
             }
-            free(namelist[i]);
         }
+        free(namelist[i]);
     }
     free(namelist);
 }
