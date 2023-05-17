@@ -25,6 +25,7 @@ void tree_(const char *directory, int order);
 void head(const char* file, unsigned int n);
 void tail_stupid(const char* file, unsigned int n);
 void tail(const char* file, unsigned int n);
+void cat(const char* file);
 
 
 #endif //S21_FILESYSTEM_H

@@ -1,4 +1,4 @@
-all: tree_ head_ tail_
+all: tree_ head_ tail_ cat_
 
 filesystem.o: filesystem.c filesystem.h
 	gcc -c filesystem.c
@@ -11,3 +11,6 @@ head_: head_.c filesystem.o
 
 tail_: tail_.c filesystem.o
 	gcc -o tail_ tail_.c filesystem.o
+
+cat_: cat_.c filesystem.o
+	gcc -o cat_ cat_.c filesystem.o

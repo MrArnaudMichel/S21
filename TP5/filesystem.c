@@ -10,7 +10,10 @@ u_int8_t is_visible(const char *directory) {
 u_int8_t is_directory(const char *directory) {
     struct stat statbuf;
     stat(directory, &statbuf);
-    return S_ISDIR(statbuf.st_mode);
+    if (S_ISDIR(statbuf.st_mode)){
+        return 1;
+    }
+    return 0;
 }
 
 void print_directory(const char *directory, int order) {
@@ -37,13 +40,14 @@ void tree_(const char *directory, int order) {
         for (int i = 0; i < n; i++) {
             if (is_visible(namelist[i]->d_name)) {
                 print_directory(namelist[i]->d_name, order);
-                if (is_directory(namelist[i]->d_name)) {
+                if (is_directory(namelist[i]->d_name) == 1) {
                     tree_(namelist[i]->d_name, order + 1);
                 }
             }
             free(namelist[i]);
         }
     }
+    free(namelist);
 }
 
 void head(const char* file, unsigned int n) {
@@ -150,4 +154,22 @@ void tail(const char* file, unsigned int n) {
         free(lines[j]);
     }
     free(lines);
+}
+
+void cat(const char* file){
+    FILE* f = fopen(file, "r");
+    if (f == NULL) {
+        fprintf(stderr, "Error opening file %s\n", file);
+        exit(EXIT_FAILURE);
+    }
+    char* line = NULL;
+    size_t len = 0;
+    ssize_t read;
+    while ((read = getline(&line, &len, f)) != -1) {
+        printf("%s", line);
+    }
+    fclose(f);
+    if (line) {
+        free(line);
+    }
 }
