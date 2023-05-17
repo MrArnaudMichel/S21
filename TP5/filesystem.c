@@ -10,10 +10,7 @@ u_int8_t is_visible(const char *directory) {
 u_int8_t is_directory(const char *directory) {
     struct stat statbuf;
     stat(directory, &statbuf);
-    if (S_ISDIR(statbuf.st_mode)){
-        return 1;
-    }
-    return 0;
+    return S_ISDIR(statbuf.st_mode);
 }
 
 void print_directory(const char *directory, int order) {
