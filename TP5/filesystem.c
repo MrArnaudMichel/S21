@@ -10,7 +10,10 @@ u_int8_t is_visible(const char *directory) {
 u_int8_t is_directory(const char *directory) {
     struct stat statbuf;
     stat(directory, &statbuf);
-    return S_ISDIR(statbuf.st_mode);
+    if (S_ISDIR(statbuf.st_mode)){
+        return 1;
+    }
+    return 0;
 }
 
 void print_directory(const char *directory, int order) {
@@ -43,6 +46,8 @@ void tree_(const char *directory, int order) {
             if (is_directory(path)) {
                 print_directory(namelist[i]->d_name, order);
                 tree_(path, order + 1);
+            } else {
+                print_directory(namelist[i]->d_name, order);
             }
         }
         free(namelist[i]);
